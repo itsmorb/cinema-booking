@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ScreeningRepository extends JpaRepository<Screening, Long> {
 
-    List<Screening> findByMovieId(Screening screening);
+    List<Screening> findByMovieId(Long movieId);
 
     List<Screening> findByStartTimeAfter(LocalDateTime startTime);
 
