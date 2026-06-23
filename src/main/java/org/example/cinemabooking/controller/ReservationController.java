@@ -45,7 +45,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.confirmReservation(id, userDetails.getUsername()));
     }
 
-    @DeleteMapping("/{id}/confirm")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<ReservationResponse> cancelReservation(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {

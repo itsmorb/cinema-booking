@@ -4,8 +4,10 @@ package org.example.cinemabooking.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.cinemabooking.dto.response.ScreeningResponse;
 import org.example.cinemabooking.dto.response.SeatResponse;
+import org.example.cinemabooking.entity.Screening;
 import org.example.cinemabooking.service.ScreeningService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,20 @@ import java.util.List;
 public class ScreeningController {
 
     private final ScreeningService screeningService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ScreeningResponse> addScreening(@RequestBody Screening screening) {
+        return ResponseEntity.ok(screeningService.addScreening(screening));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteScreening(@PathVariable Long id) {
+        screeningService.deleteScreening(id);
+        return ResponseEntity.ok("Screening deleted successfully");
+    }
+
 
     @GetMapping
     public ResponseEntity<List<ScreeningResponse>> getScreenings(

@@ -3,8 +3,10 @@ package org.example.cinemabooking.service;
 import lombok.RequiredArgsConstructor;
 import org.example.cinemabooking.dto.response.ScreeningResponse;
 import org.example.cinemabooking.dto.response.SeatResponse;
+import org.example.cinemabooking.entity.Movie;
 import org.example.cinemabooking.entity.Screening;
 import org.example.cinemabooking.entity.Seat;
+import org.example.cinemabooking.repository.MovieRepository;
 import org.example.cinemabooking.repository.ScreeningRepository;
 import org.example.cinemabooking.repository.SeatRepository;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,34 @@ public class ScreeningService {
 
     private final ScreeningRepository screeningRepository;
     private final SeatRepository seatRepository;
+    private final MovieRepository movieRepository;
+
+    public ScreeningResponse addScreening(Screening screening) {
+        Movie movie = movieRepository.findById(screening.getMovie().getId())
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        screening.setMovie(movie);
+        Screening saved = screeningRepository.save(screening);
+
+        for (int row = 1; row <= 5; row++) {
+            for (int seat = 1; seat <= 10; seat++) {
+                Seat newSeat = new Seat();
+                newSeat.setScreening(saved);
+                newSeat.setRowNumber(row);
+                newSeat.setSeatNumber(seat);
+                newSeat.setIsReserved(false);
+                seatRepository.save(newSeat);
+            }
+        }
+
+        return mapToResponse(saved);
+    }
+
+    public void deleteScreening(Long id) {
+        if (!screeningRepository.existsById(id)) {
+            throw new RuntimeException("Screening not found with id: " + id);
+        }
+        screeningRepository.deleteById(id);
+    }
 
     public List<ScreeningResponse> getAllScreenings() {
         return screeningRepository.findAll()
