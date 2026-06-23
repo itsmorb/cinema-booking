@@ -2,7 +2,6 @@ package org.example.cinemabooking.dto.response;
 
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
