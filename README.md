@@ -130,3 +130,29 @@ Database runs on `localhost:5432` with:
 - Database: `cinema`
 - Username: `cinema_user`
 - Password: `cinema_pass`
+
+## Initial Setup
+
+After starting the application, the database will be empty.
+
+To get started:
+
+1. Register an admin user:
+```json
+POST /api/auth/register
+{
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "password123"
+}
+```
+
+2. Manually set the role to ADMIN in the database:
+```bash
+docker exec -it cinema-postgres psql -U cinema_user -d cinema
+```
+```sql
+UPDATE users SET role = 'ADMIN' WHERE username = 'admin';
+```
+
+3. Login as admin and use the token to add movies and screenings.
